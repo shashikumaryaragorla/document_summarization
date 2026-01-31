@@ -1,39 +1,39 @@
 import streamlit as st
 from transformers import pipeline
-import torch
+
+st.set_page_config(page_title="Summarizer", layout="centered")
 
 @st.cache_resource
 def load_model():
     return pipeline(
         "summarization",
         model="sshleifer/distilbart-cnn-12-6",
-        device=-1  # Force CPU (saves memory)
+        device=-1,
+        torch_dtype="float32"
     )
 
 summarizer = load_model()
 
-def chunk_text(text, max_words=400):
+def chunk_text(text, max_words=350):
     words = text.split()
     return [" ".join(words[i:i + max_words]) for i in range(0, len(words), max_words)]
 
-st.title("📄 Document Summarization App")
+st.title("Text Summarization App")
 
-text = st.text_area("Enter text", height=250)
+text = st.text_area("Paste text (max 4000 chars)", height=220)
+text = text[:4000]
 
 if st.button("Summarize"):
-    if text.strip():
+    with st.spinner("Summarizing..."):
         summaries = []
         for chunk in chunk_text(text):
-            out = summarizer(
+            result = summarizer(
                 chunk,
-                max_length=120,
+                max_length=100,
                 min_length=30,
                 do_sample=False
             )
-            summaries.append(out[0]["summary_text"])
+            summaries.append(result[0]["summary_text"])
 
         st.subheader("Summary")
         st.write(" ".join(summaries))
-    else:
-        st.warning("Please enter text")
-
