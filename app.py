@@ -1,7 +1,6 @@
 import streamlit as st
+import torch
 from transformers import pipeline
-
-st.set_page_config(page_title="Summarizer", layout="centered")
 
 @st.cache_resource
 def load_model():
@@ -9,7 +8,7 @@ def load_model():
         "summarization",
         model="sshleifer/distilbart-cnn-12-6",
         device=-1,
-        torch_dtype="float32"
+        torch_dtype=torch.float32
     )
 
 summarizer = load_model()
