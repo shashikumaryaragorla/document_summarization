@@ -6,9 +6,8 @@ from transformers import pipeline
 def load_model():
     return pipeline(
         "summarization",
-        model="sshleifer/distilbart-cnn-12-6",
-        device=-1,
-        torch_dtype=torch.float32
+        model="t5-small",
+        device=-1
     )
 
 summarizer = load_model()
