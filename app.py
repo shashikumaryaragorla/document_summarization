@@ -10,7 +10,7 @@ def load_model():
 
 summarizer = load_model()
 
-st.title("Document Summarization App")
+st.title("Text Summarization App")
 
 text = st.text_area("Enter text to summarize")
 
